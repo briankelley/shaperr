@@ -1,7 +1,12 @@
 # shaperr
-[![Join the chat at https://gitter.im/briankelley/shaperr](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/briankelley/shaperr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<<<<<<< HEAD
 
-**Traffic shaping for Plex Media Server**
+[![Join the chat at https://gitter.im/briankelley/shaperr](https://badges.gitter.im/briankelley/shaperr.svg)](https://gitter.im/briankelley/shaperr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Traffic shaping for Plex Media Server
+=======
+
+
+
 
 Supported platforms (so far): Ubuntu Linux 12.04+
 
@@ -13,3 +18,4 @@ Supported platforms (so far): Ubuntu Linux 12.04+
 * Chunked buffering of Plex clients.
 
 *So, you've managed to convince your outside friends and family to lower their quality settings to something respectable. But when they stream transcoded video, it's delivered to the client in incremental "chunks" at whatever your line speed is. So, for a 1Mbps video, it will max out a 4Mbps pipe 25% of the time and spend the other 75% idling. If you use the same connection for gaming, lag spikes = death.*
+>>>>>>> master
