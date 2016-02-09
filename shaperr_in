@@ -1,0 +1,29 @@
+#!/bin/bash
+
+	#You'll see a few "gu.ly/??" urls in these scripts. I tend to keep "help urls" embedded in
+	#scripts for days when I'm trying to figure out why I did something. safe to ignore.
+
+#pull in variables from our config file #gu.ly/hz
+. ./shaperr.conf
+
+tail -Fq -n 0 "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Logs/Plex Media Server.log" | \
+	awk -v sp=$SHAPERR_PATH '
+		{
+		var_ip=match($0,/\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{4,5}\]/)
+		var_ip_RSTART=RSTART
+		var_ip_RLENGTH=RLENGTH
+		var_start=match($0,/\/transcode\/universal\/start/)
+		var_stop=match($0,/\/transcode\/universal\/stop/)
+		if ((var_ip > 0) && (var_start > 0 || var_stop > 0) && ($0 ~ /Request/))
+			{
+			close(sp "/shaperr.log");
+			split(substr($0,var_ip_RSTART,var_ip_RLENGTH),tmpSPLIT,":");
+			var_start>0?bol_startstop="start":bol_startstop="stop";
+			var_IPOUT=(substr(tmpSPLIT[1],2) "|" bol_startstop);
+			var_DATEOUT=(strftime("%D %T"));
+			print var_DATEOUT " " var_IPOUT >> sp "/shaperr.log";
+			system("sh " sp "/shaperr_out \""var_IPOUT"\"");
+			close("sh " sp "/shaperr_out \""var_IPOUT"\""); #gu.ly/hu
+			close(sp "/shaperr.log");
+			}
+		}'
