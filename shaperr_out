@@ -1,0 +1,61 @@
+#!/bin/bash
+
+	#You'll see a few "gu.ly/??" urls in these scripts. I tend to keep "help urls" embedded in
+	#scripts for days when I'm trying to figure out why I did something. safe to ignore.
+
+#pull in variables from our config file #gu.ly/hz
+. ./shaperr.conf
+
+string=$1
+#echo "...new event=>"$string >> $SHAPERR_PATH"/shaperr.log"
+#echo "...\$IFDEV:"$IFDEV"\n...\$RATE:"$RATE"\n...\$MAXRATE:"$MAXRATE"\n" >> $SHAPERR_PATH"/shaperr.log"
+
+echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRATE=$MAXRATE ' \
+	{
+	if ($2 = /start/)
+		{
+			print "\nvalue was start";
+			split($1,arrOCTET,".");
+			varCLASS=(arrOCTET[3] arrOCTET[4]);
+
+			system("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
+			close("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
+			print "/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "";
+
+			#system("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
+			#close("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
+			#print "/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq";
+
+				#gu.ly/h5
+			system("/sbin/iptables -A OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w");
+			close("/sbin/iptables -A OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w");
+			print "/sbin/iptables -A OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w";
+
+				#gu.ly/h3
+			system("/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
+			close("/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
+			print "/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "";
+		}
+	else
+		{
+			print "\nvalue was stop";
+			split($1,arrOCTET,".");
+			varCLASS=(arrOCTET[3] arrOCTET[4]);
+
+			system("/sbin/tc filter del dev " varIFDEV " parent 1: prio 3 handle " varCLASS " fw flowid 1:" varCLASS "");
+			close("/sbin/tc filter del dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
+			print "/sbin/tc filter del dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "";
+
+			system("/sbin/iptables -D OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w");
+			close("/sbin/iptables -D OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w");
+			print "/sbin/iptables -D OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w";
+
+			#system("/sbin/tc qdisc del dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
+			#close("/sbin/tc qdisc del dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
+			#print "/sbin/tc qdisc del dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq";
+
+			system("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
+			close("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
+			print "/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "";
+		}
+	}' >> $SHAPERR_PATH"/shaperr.log" &
