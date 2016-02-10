@@ -21,7 +21,7 @@ tail -Fq -n 0 "/var/lib/plexmediaserver/Library/Application Support/Plex Media S
 			var_start>0?bol_startstop="start":bol_startstop="stop";
 			var_IPOUT=(substr(tmpSPLIT[1],2) "|" bol_startstop);
 			var_DATEOUT=(strftime("%D %T"));
-			print var_DATEOUT " " var_IPOUT >> sp "/shaperr.log";
+			print "\n" var_DATEOUT " " var_IPOUT " shaperr_in" >> sp "/shaperr.log";
 			system("sh " sp "/shaperr_out \""var_IPOUT"\"");
 			close("sh " sp "/shaperr_out \""var_IPOUT"\""); #gu.ly/hu
 			close(sp "/shaperr.log");
