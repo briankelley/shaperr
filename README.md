@@ -51,11 +51,11 @@ Sadly, I don't have any concrete instructions yet. This is a work in progress an
 
 ####To-do
 - [x] temporarily determine `tc` class id naming
-- [] research and implement classless queuing discipline sfq/sfb/drr
-- [] capture network MTU for defined interface and use in `tc` commands
-- [] implement network exclusion
-- [] usage & setup instructions
-- [] implement a nosql db for tracking by session in addition to IP
+- [ ] research and implement classless queuing discipline sfq/sfb/drr
+- [ ] capture network MTU for defined interface and use in `tc` commands
+- [ ] implement network exclusion
+- [ ] usage & setup instructions
+- [ ] implement a nosql db for tracking by session in addition to IP
 
 ####Wishlist
-- [] python web interface ala "PyPlex"
+- [ ] python web interface ala "PyPlex"
