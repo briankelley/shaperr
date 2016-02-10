@@ -7,8 +7,8 @@
 . ./shaperr.conf
 
 string=$1
-#echo "...new event=>"$string >> $SHAPERR_PATH"/shaperr.log"
-#echo "...\$IFDEV:"$IFDEV"\n...\$RATE:"$RATE"\n...\$MAXRATE:"$MAXRATE"\n" >> $SHAPERR_PATH"/shaperr.log"
+echo "\n...new event=>"$string >> $SHAPERR_PATH"/shaperr.log"
+echo "...\$IFDEV:"$IFDEV"\n...\$RATE:"$RATE"\n...\$MAXRATE:"$MAXRATE"\n" >> $SHAPERR_PATH"/shaperr.log"
 
 echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRATE=$MAXRATE ' \
 	{
@@ -16,11 +16,11 @@ echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRA
 		{
 			print "\nvalue was start";
 			split($1,arrOCTET,".");
-			varCLASS=(arrOCTET[3] arrOCTET[4]);
+			varCLASS=(5000 + arrOCTET[4]);
 
-			system("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
-			close("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
-			print "/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "";
+			system("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500");
+			close("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500");
+			print "/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500";
 
 			#system("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
 			#close("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
@@ -40,7 +40,7 @@ echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRA
 		{
 			print "\nvalue was stop";
 			split($1,arrOCTET,".");
-			varCLASS=(arrOCTET[3] arrOCTET[4]);
+			varCLASS=(5000 + arrOCTET[4]);
 
 			system("/sbin/tc filter del dev " varIFDEV " parent 1: prio 3 handle " varCLASS " fw flowid 1:" varCLASS "");
 			close("/sbin/tc filter del dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
@@ -54,8 +54,8 @@ echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRA
 			#close("/sbin/tc qdisc del dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
 			#print "/sbin/tc qdisc del dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq";
 
-			system("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
-			close("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "");
-			print "/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE "";
+			system("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500");
+			close("/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500");
+			print "/sbin/tc class del dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500";
 		}
 	}' >> $SHAPERR_PATH"/shaperr.log" &

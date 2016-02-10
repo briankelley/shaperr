@@ -1,7 +1,7 @@
 #!/bin/bash
 
-	#You'll see a few "gu.ly/??" urls in these scripts. I tend to keep "help urls" embedded in
-	#scripts for days when I'm trying to figure out why I did something. safe to ignore.
+    #You'll see a few "gu.ly/??" urls in these scripts. I tend to keep "help urls" embedded in
+    #scripts for days when I'm trying to figure out why I did something. safe to ignore.
 
 #pull in variables from our config file #gu.ly/hz
 . ./shaperr.conf
@@ -35,29 +35,3 @@ echo "old tailpipe killed" >> $SHAPERR_PATH"/shaperr.log"
 #kick off the workhorse script then exit
 echo "BEGIN watching start/stop events" >> $SHAPERR_PATH"/shaperr.log"
 . $SHAPERR_PATH"/shaperr_in" &
-
-: '
---------------------
-     KNOWN ISSUES
---------------------
-* When "click & drag" seeking occurs using the timeline in a Plex client, the IPTABLES rules may not
-  be added/removed or may, in some cases, be duplicated. This occurs because the server is sent a
-  STOP and START request for each position that can be assertained on the clients timeline which 
-  causes instant execution of server-side IPTABLES commands. By comparison, clicking a specific
-  location on the timeline to seek to results in a single STOP / START event.
-* There is currently no clean-up of traffic control classes and filters for clients who disappear as
-  a result of network disconnect, Plex client crash, or closing a client without explicitly
-  STOPPING the video. This lack of clean-up includes pausing a video then closing the client. Videos
-  that complete normally has only seen limited testing.
-* SFQ / SFB / DRR round robin scheduling not yet implemented. Plex clients will still be garanteed their
-  RATE and bound to their CEIL values, but the distribution of excess class bandwidth when $SERVERMAX
-  is acheived (we are hitting your preset server maximum bandwidth value) is done using FCFS (first
-  come first served).
-* Exclusion of specific networks from traffic control not yet implemented (i.e. exempting your home
-  network from the rules while enforcing the rules for those who connect from outside).
-* TC class id "name" is based on last octet of connecting IP address. While it is unlikely this would 
-  result in a duplication collision, a better method for naming is needed -- preferably using
-    "tc class show dev"
-  to query existing or perhaps randomization logic. Class ID handle can not be longer than 4 digits,
-  otherwise I would use the last 2 octets.
-'
