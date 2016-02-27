@@ -22,9 +22,10 @@ echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRA
 			close("/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500");
 			print "/sbin/tc class add dev " varIFDEV " parent 1:1 classid 1:" varCLASS " htb rate " varRATE " ceil " varMAXRATE " mtu 1500";
 
-			#system("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
-			#close("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq");
-			#print "/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq";
+
+  			#system("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq perturb 5");
+			#close("/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq perturb 5");
+			#print "/sbin/tc qdisc add dev " varIFDEV " parent 1:" varCLASS " handle " varCLASS ": sfq perturb 5";
 
 				#gu.ly/h5
 			system("/sbin/iptables -A OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w");
@@ -32,6 +33,7 @@ echo "${string}" | awk -v FS="|" -v varIFDEV=$IFDEV -v varRATE=$RATE -v varMAXRA
 			print "/sbin/iptables -A OUTPUT -t mangle -p tcp --sport 32400 --dst " $1 " -j MARK --set-mark " varCLASS " -w";
 
 				#gu.ly/h3
+			#tc filter add dev eth0 parent 1:0 protocol ip prio 3 u32 match ip dst 172.20.1.46/32 match ip sport 32400 0xffff flowid 1:5046
 			system("/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
 			close("/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "");
 			print "/sbin/tc filter add dev " varIFDEV " parent 1: prio 3 protocol all handle " varCLASS " fw flowid 1:" varCLASS "";

@@ -9,28 +9,31 @@
 #activate schedulers in the kernel (haven't decided which ones will be used. more research.)
 echo "\n\nactivating schedulers" >> $SHAPERR_PATH"/shaperr.log"
 modprobe sch_htb
-sleep 1
-modprobe sch_sfq
-sleep 1
-modprobe sch_sfb
-sleep 1
+sleep 2
+#modprobe sch_sfq
+#sleep 1
+#modprobe sch_sfb
+#sleep 1
 
 echo "setting tcp_ecn kernel param if not set" >> $SHAPERR_PATH"/shaperr.log" #gu.ly/hr, gu.ly/hs, gu.ly/h6
 /sbin/sysctl net.ipv4.tcp_ecn=2 > /dev/null || /bin/true
 
 echo "removing existing root qdisc" >> $SHAPERR_PATH"/shaperr.log"
 /sbin/tc qdisc del dev $IFDEV root > /dev/null
-sleep 1
+sleep 2
 
-echo "adding root qdisc and first leaf. \n...\$IFDEV:"$IFDEV "\n...\$SERVERMAX:"$SERVERMAX >> $SHAPERR_PATH"/shaperr.log"
+echo "adding root queuing discipline and root class. \n...\$IFDEV:"$IFDEV "\n...\$SERVERMAX:"$SERVERMAX >> $SHAPERR_PATH"/shaperr.log"
 /sbin/tc qdisc add dev $IFDEV root handle 1: htb default 0
-/sbin/tc class add dev $IFDEV parent 1: classid 1:1 htb rate $SERVERMAX ceil $SERVERMAX mtu 1500
+sleep 2
+/sbin/tc class add dev $IFDEV parent 1: classid 1:1 htb rate $SERVERMAX mtu 1500 #gu.ly/ik
+sleep 2
 
 #kill previous instances of our tail / pipe command initiated from "shaperr_in"
 #assumes default location of "Plex Media Server.log".
 #reminder: Plex DEBUG logging req'd. verbose logging not needed.
 ps -ax | awk '/tail -Fq -n 0 \/var\/lib\/plexmediaserver\/Library\/Application Support\/Plex Media Server\/Logs\/Plex Media Server.log/ && ! /awk/ { system("kill "$1); close("kill -9 "$1); }'
 echo "old tailpipe killed" >> $SHAPERR_PATH"/shaperr.log"
+sleep 2
 
 #kick off the workhorse script then exit
 echo "BEGIN watching start/stop events" >> $SHAPERR_PATH"/shaperr.log"
