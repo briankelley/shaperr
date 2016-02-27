@@ -43,13 +43,13 @@ Steps below assume git is already installed
   
 1. optional: start your monitoring windows (below) if you haven't already.
 2. change directories to /opt
-2. `git clone https://github.com/briankelley/shaperr`
-3. `cp ./shaperr.conf.orig ./shaperr.conf`
-4. edit settings in shaperr.conf
-5. as the root user (not sudo) `sh shaperr_start`
-6. you can exit root when the prompt returns
+3. `git clone https://github.com/briankelley/shaperr`
+4. `cp ./shaperr.conf.orig ./shaperr.conf`
+5. edit settings in shaperr.conf
+6. as the root user (not sudo) `sh shaperr_start`
+7. you can exit root when the prompt returns
 
-Re-running the script at any time (step 4), so long as you do it as the root user, removes throttling for **all currently connected streams** and reinitializes the Plex logfile tail.
+Re-running the script at any time (step 6), so long as you do it as the root user, removes throttling for **all currently connected streams** and reinitializes the Plex logfile tail.
 
 New "start" actions will be throttled.
 
