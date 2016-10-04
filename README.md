@@ -2,7 +2,9 @@
 
 ## 10/3/2016 Plex releases server-side bandwidth management feature.
 Please refer to recent Plex Media Server feature announcement as a direct replacement for Shaperr. This is a feature that has been requested for years and it may appear Plex has finally delivered.
+
 https://www.plex.tv/blog/mcstreamy-brain-take-world-two-easy-steps/
+
 https://support.plex.tv/hc/en-us/articles/227715247
 
 ## Traffic shaping for Plex Media Server ##
