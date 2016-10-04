@@ -3,6 +3,12 @@
 
 ## Traffic shaping for Plex Media Server ##
 
+( 10/3/2016: Obsolete )
+
+Please refer to recent Plex Media Server feature announcement as a direct replacement for Shaperr. This is a feature that has been requested for years and it may appear Plex has finally delivered.
+https://www.plex.tv/blog/mcstreamy-brain-take-world-two-easy-steps/
+https://support.plex.tv/hc/en-us/articles/227715247
+
 ( 2/26/2016: *testable. please report issues.* )
 
 Supported platforms: Ubuntu Linux 12.04+
